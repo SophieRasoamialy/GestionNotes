@@ -31,4 +31,8 @@ const Note = sequelize.define('note', {
   }
 });
 
+Note.belongsTo(Etudiant, { foreignKey: 'etudiant_id', targetKey: 'etudiant_id' });
+Note.belongsTo(Matiere, { foreignKey: 'matiere_id', targetKey: 'matiere_id' });
+
+
 module.exports = Note;

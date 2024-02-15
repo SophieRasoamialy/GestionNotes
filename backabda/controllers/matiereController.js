@@ -1,4 +1,5 @@
 const Matiere = require('../models/matiere');
+const Note = require('../models/note');
 
 // Create
 exports.createMatiere = async (req, res) => {
@@ -14,7 +15,11 @@ exports.createMatiere = async (req, res) => {
 // Read
 exports.getMatiere = async (req, res) => {
   try {
-    const matieres = await Matiere.findAll();
+    const matieres = await Matiere.findAll(
+      {
+        order: [['matiere_id', 'DESC']]
+      }
+    );
     res.status(200).json(matieres);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -44,10 +49,15 @@ exports.updateMatiere = async (req, res) => {
 exports.deleteMatiere = async (req, res) => {
   try {
     const { matiere_id } = req.params;
-    const deleted = await Matiere.destroy({
+    // Supprimer toutes les notes associées à la matière
+    await Note.destroy({
       where: { matiere_id }
     });
-    if (deleted) {
+    // Ensuite, supprimer la matière
+    const deletedMatiere = await Matiere.destroy({
+      where: { matiere_id }
+    });
+    if (deletedMatiere) {
       res.status(204).send();
     } else {
       throw new Error('Matiere non trouvée');

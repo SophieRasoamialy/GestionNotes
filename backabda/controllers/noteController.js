@@ -1,4 +1,6 @@
 const Note = require('../models/note');
+const Matiere = require('../models/matiere');
+const Etudiant = require('../models/etudiant');
 
 // Create
 exports.createNote = async (req, res) => {
@@ -14,12 +16,19 @@ exports.createNote = async (req, res) => {
 // Read
 exports.getNotes = async (req, res) => {
   try {
-    const notes = await Note.findAll();
+    const notes = await Note.findAll({
+      include: [
+        { model: Etudiant, attributes: ['etudiant_id', 'etudiant_nom'] },
+        { model: Matiere, attributes: ['matiere_id', 'matiere_design'] }
+      ],
+      attributes: ['etudiant_id', 'matiere_id', 'note']
+    });
     res.status(200).json(notes);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Update
 exports.updateNote = async (req, res) => {

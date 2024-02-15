@@ -1,4 +1,5 @@
 const Etudiant = require('../models/etudiant');
+const Note = require("../models/note");
 
 // Create
 exports.createEtudiant = async (req, res) => {
@@ -14,19 +15,22 @@ exports.createEtudiant = async (req, res) => {
 // Read
 exports.getEtudiants = async (req, res) => {
   try {
-    const etudiants = await Etudiant.findAll();
+    const etudiants = await Etudiant.findAll({
+      order: [['etudiant_id', 'DESC']] // Ordonner par ID décroissant
+    });
     res.status(200).json(etudiants);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
+
 // Update
 exports.updateEtudiant = async (req, res) => {
   try {
     const { etudiant_id } = req.params;
-    const { etudiant_nom, etudiant_moyenne } = req.body;
-    const [updated] = await Etudiant.update({ etudiant_nom, etudiant_moyenne }, {
+    const { etudiant_nom} = req.body;
+    const [updated] = await Etudiant.update({ etudiant_nom }, {
       where: { etudiant_id }
     });
     if (updated) {
@@ -44,10 +48,15 @@ exports.updateEtudiant = async (req, res) => {
 exports.deleteEtudiant = async (req, res) => {
   try {
     const { etudiant_id } = req.params;
-    const deleted = await Etudiant.destroy({
+    // Supprimer toutes les notes associées à l'étudiant
+    await Note.destroy({
       where: { etudiant_id }
     });
-    if (deleted) {
+    // Ensuite, supprimer l'étudiant
+    const deletedEtudiant = await Etudiant.destroy({
+      where: { etudiant_id }
+    });
+    if (deletedEtudiant) {
       res.status(204).send();
     } else {
       throw new Error('Etudiant non trouvé');

@@ -5,8 +5,12 @@ const matiereRoutes = require('./routes/matiereRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const auditNoteRoutes = require('./routes/auditNoteRoutes');
 const sequelize = require('./config/database');
+const cors = require('cors');
 
 const app = express();
+
+// Configurer CORS
+app.use(cors());
 
 // Middleware pour parser le corps des requêtes en JSON
 app.use(bodyParser.json());
@@ -27,7 +31,7 @@ sequelize.sync()
   });
 
 // Port d'écoute du serveur
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Serveur en écoute sur le port ${PORT}`);
 });
