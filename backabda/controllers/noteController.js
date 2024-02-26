@@ -21,7 +21,10 @@ exports.getNotes = async (req, res) => {
         { model: Etudiant, attributes: ['etudiant_id', 'etudiant_nom'] },
         { model: Matiere, attributes: ['matiere_id', 'matiere_design'] }
       ],
-      attributes: ['etudiant_id', 'matiere_id', 'note']
+      attributes: ['etudiant_id', 'matiere_id', 'note'],
+
+      order: [['createdAt', 'DESC']] 
+
     });
     res.status(200).json(notes);
   } catch (err) {
