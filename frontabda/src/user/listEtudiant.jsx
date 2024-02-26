@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 function ListEtudiant() {
   const [etudiants, setEtudiants] = useState([]);
-  const [formData, setFormData] = useState({ etudiant_nom: '', etudiant_moyenne: '' });
+  const [formData, setFormData] = useState({ etudiant_nom: '', etudiant_moyenne: 0 });
   const [formEtudiantNom, setFormEtudiantNom] = useState(""); 
   const [selectedEtudiant, setSelectedEtudiant] = useState(null); 
   const inputRef = useRef(null); // Déclarez la référence
@@ -35,7 +35,7 @@ function ListEtudiant() {
     event.preventDefault();
     try {
       await axios.post('http://localhost:3001/api/etudiants', formData);
-      setFormData({ etudiant_nom: '', etudiant_moyenne: '' }); 
+      setFormData({ etudiant_nom: '', etudiant_moyenne: 0 }); 
       fetchEtudiants(); 
       Swal.fire('Succès', 'Étudiant ajouté avec succès!', 'success'); // Alert après ajout
 
@@ -110,7 +110,7 @@ function ListEtudiant() {
             aria-label="Moyenne"
             value={formData.etudiant_moyenne}
             onChange={(e) => setFormData({ ...formData, etudiant_moyenne: e.target.value })}
-            required
+            
           />
           <button
             className="flex-shrink-0 bg-navy-500 hover:bg-navy-700 border-navy-500 hover:border-navy-700 text-sm border-4 text-white py-1 px-2 rounded"
