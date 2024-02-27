@@ -46,6 +46,10 @@ function ListEtudiant() {
     }
   };
 
+  const handleCancel = () => {
+    setFormData({ matiere_design: '', matiere_coef: '' }); 
+  }
+
   const handleEdit = (matiere) => { 
     setSelectedMatiere(matiere);
     setFormDataEdit(matiere);
@@ -95,7 +99,8 @@ function ListEtudiant() {
   
   return (
     <div className="relative overflow-x-auto w-2/3 m-auto">
-      <form className="w-full max-w-sm mx-auto m-5" onSubmit={handleSubmit}>
+      <h3 className="text-navy-500 font-extrabold text-center my-3  ">LISTE DES MATIERES</h3>
+      <form className=" w-2/3 mx-auto m-5" onSubmit={handleSubmit}>
         <div className="flex items-center border-b border-navy-500 py-2">
           <input
             className="appearance-none bg-transparent border-none w-2/3 text-navy-500 mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -121,6 +126,9 @@ function ListEtudiant() {
             type="submit"
           >
             Enregistrer
+          </button>
+          <button onClick={handleCancel} type="button" className="flex-shrink-0 border-transparent border-4 text-navy-500 hover:text-navy-700 text-sm py-1 px-2 rounded">
+            Cancel
           </button>
         </div>
       </form>

@@ -6,10 +6,11 @@ const Etudiant = require('../models/etudiant');
 exports.createNote = async (req, res) => {
   try {
     const { etudiant_id, matiere_id, note } = req.body;
+    console.log(note);
     const newNote = await Note.create({ etudiant_id, matiere_id, note });
     res.status(201).json(newNote);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message});
   }
 };
 
@@ -21,7 +22,10 @@ exports.getNotes = async (req, res) => {
         { model: Etudiant, attributes: ['etudiant_id', 'etudiant_nom'] },
         { model: Matiere, attributes: ['matiere_id', 'matiere_design'] }
       ],
-      attributes: ['etudiant_id', 'matiere_id', 'note']
+      attributes: ['etudiant_id', 'matiere_id', 'note'],
+
+      order: [['createdAt', 'DESC']] 
+
     });
     res.status(200).json(notes);
   } catch (err) {
