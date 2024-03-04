@@ -55,9 +55,12 @@ function ListEtudiant() {
     setFormDataEdit(matiere);
   };
 
+  const handleCancelEdit = () => {
+    setSelectedMatiere(null);
+    setFormDataEdit({ matiere_design: '', matiere_coef: '' });
+  }
+
   const handleUpdate = async () => { 
-    console.log(">> "+formDataEdit.matiere_coef);
-    console.log(">> "+formDataEdit.matiere_design);
     try {
       await axios.put(`http://localhost:3001/api/matieres/${selectedMatiere.matiere_id}`, {
         matiere_design:formDataEdit.matiere_design,
@@ -128,7 +131,7 @@ function ListEtudiant() {
             Enregistrer
           </button>
           <button onClick={handleCancel} type="button" className="flex-shrink-0 border-transparent border-4 text-navy-500 hover:text-navy-700 text-sm py-1 px-2 rounded">
-            Cancel
+            Annuler
           </button>
         </div>
       </form>
@@ -191,15 +194,25 @@ function ListEtudiant() {
                     className="font-medium text-blue-600 hover:underline mr-4"
                     onClick={() => handleEdit(matiere)}
                   >
-                    Edit
+                    Modifier
                   </button>
                 )}
+
+              {selectedMatiere === matiere ? (
+                  <button
+                    className="font-medium text-red-600 hover:underline"
+                    onClick={handleCancelEdit}
+                  >
+                    Annuler
+                  </button>
+                ) : (
                 <button
                   className="font-medium text-red-600 hover:underline"
                   onClick={() => handleDelete(matiere.matiere_id)}
                 >
                   Supprimer
                 </button>
+                )}
               </td>
             </tr>
           ))}

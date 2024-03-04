@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { FaTimes} from 'react-icons/fa';
+
 
 
 function ListEtudiant() {
@@ -48,6 +50,11 @@ function ListEtudiant() {
 
   const handleCancel = () => {
     setFormData({ etudiant_nom: '', etudiant_moyenne: 0 }); 
+  }
+
+  const handleCancelEdit = () => {
+    setSelectedEtudiant(null);
+    setFormEtudiantNom("");
   }
 
   const handleEdit = (etudiant) => { 
@@ -124,7 +131,7 @@ function ListEtudiant() {
             Enregistrer
           </button>
           <button onClick={handleCancel} type="button" className="flex-shrink-0 border-transparent border-4 text-navy-500 hover:text-navy-700 text-sm py-1 px-2 rounded" >
-            Cancel
+            Annuler
           </button>
         </div>
       </form>
@@ -153,15 +160,17 @@ function ListEtudiant() {
               </td>
               <td className="px-6 py-4 text-gray-700">
                 {selectedEtudiant === etudiant ? (
-                  
+                  <div className=' border-b border-navy-500 flex'>
                   <input
                   ref={inputRef}
                     type="text"
-                    className='appearance-none border-b border-navy-500  bg-transparent focus text-navy-500 mr-3 py-1 px-2 leading-tight focus:outline-none'
+                    className='appearance-none  bg-transparent focus text-navy-500 mr-3 py-1 px-2 leading-tight focus:outline-none'
                     value={formEtudiantNom}
                     onChange={(e) => setFormEtudiantNom(e.target.value )}
                     required
                   />
+                  <button type='button' onClick={handleCancelEdit} className='text-red-500 '><FaTimes/></button>
+                  </div>
                 ) : (
                   etudiant.etudiant_nom
                 )}
@@ -182,7 +191,7 @@ function ListEtudiant() {
                     className="font-medium text-blue-600 hover:underline mr-4"
                     onClick={() => handleEdit(etudiant)}
                   >
-                    Edit
+                    Modifier
                   </button>
                 )}
                 <button

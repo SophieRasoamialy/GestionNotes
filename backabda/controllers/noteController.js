@@ -69,3 +69,22 @@ exports.deleteNote = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getNotesParMatiere = async (req, res) => {
+  try {
+    const { matiere_id } = req.params;
+    const notes = await Note.findAll({
+      include: [
+        { model: Etudiant, attributes: ['etudiant_id', 'etudiant_nom'] },
+        { model: Matiere, attributes: ['matiere_id', 'matiere_design'] }
+      ],
+      attributes: ['etudiant_id', 'matiere_id', 'note'],
+      where:{matiere_id:matiere_id},
+      order: [['createdAt', 'DESC']] 
+
+    });
+    res.status(200).json(notes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { FaTimes } from 'react-icons/fa';
 
 function ListNote() {
   const [notes, setNotes] = useState([]);
@@ -33,6 +34,22 @@ function ListNote() {
       setNotes(response.data);
     } catch (error) {
       console.error('Erreur lors de la récupération des données:', error);
+    }
+  };
+
+  const fetchNotesParMatiere = async (matiere_id) => {
+    if(matiere_id !== 0)
+    {
+      
+      try {
+        const response = await axios.get(`http://localhost:3001/api/notes/matiere/${matiere_id}`);
+        setNotes(response.data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des données:', error);
+      }
+    }
+    else{
+      fetchNotes();
     }
   };
   const fetchEtudiants = async () => {
@@ -78,6 +95,13 @@ function ListNote() {
     setSelectedEtudiant(null);
     setSelectedMatiere(null);
     setNoteNew(0);
+  }
+
+  const handleCancelEdit = () => {
+    setSelectedEtudiant(null);
+    setSelectedMatiere(null);
+    setNoteEdit("");
+    setSelectedNote(null);
   }
 
   const handleEdit = (note) => { 
@@ -130,6 +154,16 @@ function ListNote() {
   };
 
   return (
+    <div className=''>
+      <div className='shadow-md rounded-lg w-1/6 mt-28 ml-5 float-left bg-white text-gray-500'>
+        <select onChange={(e) => fetchNotesParMatiere(e.target.value) } className="appearance-none bg-transparent border-none w-full text-navy-500 mr-3 py-1 px-2 leading-tight focus:outline-none" >
+            <option value={0}>Filtrer par matiere</option>
+            <option value={0} >Tout</option>
+            {matieres.map((matiere) => (
+              <option value={matiere.matiere_id}>{matiere.matiere_design}</option>
+            ))}  
+          </select>
+      </div>
     <div className="relative overflow-x-auto   w-2/3  m-auto">
     <h3 className="text-navy-500 font-extrabold text-center my-3 ">LISTE DES NOTES</h3>
       <form className="w-full  mx-auto m-5" onSubmit={handleSubmit}>
@@ -159,7 +193,7 @@ function ListNote() {
            Enregistrer
           </button>
           <button onClick={handleCancel} className="flex-shrink-0 border-transparent border-4 text-navy-500 hover:text-navy-700 text-sm py-1 px-2 rounded" type="button">
-            Cancel
+            Annuler
           </button>
         </div>
       </form>
@@ -191,15 +225,17 @@ function ListNote() {
               </td>
               <td className="px-6 py-4">
               {selectedNote === note ? (
-                  
+                  <div className='border-b border-navy-500 flex'>
                   <input
                   ref={inputRef}
                     type="text"
-                    className='appearance-none border-b border-navy-500  bg-transparent focus text-navy-500 mr-3 py-1 px-2 leading-tight focus:outline-none'
+                    className='appearance-none   bg-transparent focus text-navy-500 mr-3 py-1 px-2 leading-tight focus:outline-none'
                     value={noteEdit}
                     onChange={(e) => setNoteEdit(e.target.value )}
                     required
                   />
+                  <button type='button' onClick={handleCancelEdit} className='text-red-500 '><FaTimes/></button>
+                  </div>
                 ) : (
                   note.note
                 )}
@@ -218,7 +254,7 @@ function ListNote() {
                     className="font-medium text-blue-600 hover:underline mr-4"
                     onClick={() => handleEdit(note)}
                   >
-                    Edit
+                    Modifier
                   </button>
                 )}
                 
@@ -233,6 +269,7 @@ function ListNote() {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }
